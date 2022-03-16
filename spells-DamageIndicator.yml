@@ -1,0 +1,48 @@
+#Created by Perevl, a small damage indicator to post above the target when damage is done.
+
+#variables
+variables:
+    DamageAmount:
+        type: playerstring
+        permanent: false 
+        
+#Passive that calls the damage
+GetDamage_passive:
+ spell-class: ".PassiveSpell"
+ triggers:
+ - givedamage
+ spells:
+ - GetDamage-Multi(mode=full)
+
+    
+GetDamage-Multi:
+ spell-class: ".TargetedMultiSpell"
+ helper-spell: true
+ require-entity-target: true
+ spells:
+ - GetDamage_grab(mode=full;delay=0)
+ - DELAY 4
+ - GetDamage_Totem(mode=full)
+
+#Grabs the last amount of damage you did, storing it in the variable 
+GetDamage_grab:
+ spell-class: ".targeted.DataSpell"
+ helper-spell: true 
+ target-self: false
+ variable-name: DamageAmount
+ data-element: lastdamagecause.amount
+
+GetDamage_Totem:
+ spell-class: ".targeted.TotemSpell"
+ helper-spell: true 
+ y-offset: -1
+ range: 4
+ total-pulses: 4
+ interval: 2
+ max-distance: 100
+ max-duration: 100
+ helmet: sea_lantern
+ totem-name: "&6%var:DamageAmount:0%"
+ cap-per-player: 10
+ visible: false
+ targetable: false
